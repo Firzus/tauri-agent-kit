@@ -1,11 +1,10 @@
 name: Check
 on:
-  push:
-    branches: ["**"]
+  workflow_dispatch:
   workflow_call:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'push' }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_dispatch' }}
 permissions:
   contents: read
 jobs:
