@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "tauri": {
+      "source": "Firzus/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web/tauri/SKILL.md",
+      "computedHash": "f72b2529ecdbd0194708d0de55fa6019d9dd22b1f42fc3cebf5d7380bbe0d6b3"
+    },
+    "vite-plus-best-practices": {
+      "source": "Firzus/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web/vite-plus-best-practices/SKILL.md",
+      "computedHash": "3b9b6b062326d0269687b5bcdbe1d1d1c9e6fb16d830300da839b7cf7bea0456"
+    }
+  }
+}
