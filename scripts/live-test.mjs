@@ -205,6 +205,8 @@ try {
   await client.close();
   fixture.kill();
   await new Promise((resolve) =>
-    fixture.exitCode !== null ? resolve() : fixture.once("exit", resolve),
+    fixture.exitCode !== null || fixture.signalCode !== null
+      ? resolve()
+      : fixture.once("exit", resolve),
   );
 }

@@ -166,9 +166,13 @@ try {
   fixture.kill();
   secondary.kill();
   await new Promise((resolve) =>
-    fixture.exitCode !== null ? resolve() : fixture.once("exit", resolve),
+    fixture.exitCode !== null || fixture.signalCode !== null
+      ? resolve()
+      : fixture.once("exit", resolve),
   );
   await new Promise((resolve) =>
-    secondary.exitCode !== null ? resolve() : secondary.once("exit", resolve),
+    secondary.exitCode !== null || secondary.signalCode !== null
+      ? resolve()
+      : secondary.once("exit", resolve),
   );
 }
