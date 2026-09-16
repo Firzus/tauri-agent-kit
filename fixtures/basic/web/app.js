@@ -26,3 +26,6 @@ document.querySelector("#block").addEventListener("click", () => {
   while (performance.now() < end) {}
 });
 console.info("fixture-ready");
+void window.__TAURI__.core.invoke("plugin:agent-kit|record_ipc", {
+  record: { command: "fixture_ready", durationMs: performance.now(), outcome: "ok" },
+});

@@ -53,6 +53,16 @@ try {
   }
   assert.equal(targets.webviews.length, 2);
   outcomes.push("two same-title windows addressed by exact labels");
+  let ready = false;
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const records = await call("get_ipc_calls", target);
+    ready = records.records.some(
+      (row) => row.data.command === "fixture_ready" && row.data.webviewId === target.webviewId,
+    );
+    if (ready) break;
+    await delay(250);
+  }
+  assert.ok(ready, `Fixture startup incomplete: ${JSON.stringify(await call("diagnose", target))}`);
   let snapshot;
   for (let attempt = 0; attempt < 40; attempt++) {
     snapshot = await call("snapshot", target);
