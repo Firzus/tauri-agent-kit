@@ -2,6 +2,8 @@
 
 Only reviewed alpha releases are supported. Nothing publishes on push or merge. First publication requires the maintainer's explicit approval and registry authentication. Never paste tokens into issues, source, logs or chat.
 
+CI never starts on push. Mark a draft PR ready for review to run the required merge check. After further commits, return it to draft and mark it ready again, or rerun an eligible PR check for the current revision. A standalone manual workflow run is useful for diagnostics but does not satisfy GitHub's required PR status checks.
+
 ## Public-content gate
 
 Review `git ls-files` and the exact npm/Cargo package inventories. Only `docs/media/fixture.png` and `docs/media/fixture-results.json` are approved public demo evidence. Do not attach the entire artifacts directory. Private integrations, backups and original reports belong outside the repository, not just in gitignore. Search the staged text for private application names, personal paths and credentials before the first commit.
