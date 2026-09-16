@@ -102,6 +102,37 @@ try {
   });
   assert.equal(invalid.isError, true);
   assert.equal(await call("evaluate_js", { ...target, expression: "window.fixtureClicks" }), 0);
+  await call("evaluate_js", {
+    ...target,
+    expression:
+      "(() => { const field=document.querySelector('#message'); field.onmousedown=event=>{event.preventDefault();setTimeout(()=>field.focus(),100)}; return true })()",
+  });
+  await call("type_text", { ...target, reference: field.reference, text: "delayed" });
+  assert.equal(
+    await call("evaluate_js", {
+      ...target,
+      expression: "document.querySelector('#message').value",
+    }),
+    "delayed",
+  );
+  await call("evaluate_js", {
+    ...target,
+    expression:
+      "(() => { const field=document.querySelector('#message'); field.blur(); field.onmousedown=event=>event.preventDefault(); return true })()",
+  });
+  const unfocused = await client.callTool({
+    name: "type_text",
+    arguments: { ...target, reference: field.reference, text: "forbidden" },
+  });
+  assert.equal(unfocused.isError, true);
+  assert.match(JSON.stringify(unfocused.content), /editable_target_lost_focus/);
+  assert.equal(
+    await call("evaluate_js", {
+      ...target,
+      expression: "document.querySelector('#message').value",
+    }),
+    "delayed",
+  );
   const ipc = await call("invoke_command", {
     ...target,
     command: "echo",
@@ -126,6 +157,8 @@ try {
       blockedJavaScriptDiagnosis: "passed",
       multiInstance: "passed",
       advancedGate: "passed",
+      delayedFocus: "passed",
+      unfocusedTextRejected: "passed",
     }),
   );
 } finally {
