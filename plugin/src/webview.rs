@@ -333,10 +333,17 @@ pub async fn dispatch<R: Runtime>(
                 let text = string(&params, "text")?;
                 let reference = serde_json::to_string(string(&params, "reference")?)
                     .map_err(|e| e.to_string())?;
-                let focused=evaluate(&view,format!("window.__tauriAgentKitObservation?.entries.get({reference})?.element===document.activeElement")).await?;
-                if focused != true {
-                    return Err("editable_target_lost_focus".into());
-                }
+                tokio::time::timeout(Duration::from_secs(1), async {
+                    loop {
+                        let focused=evaluate(&view,format!("window.__tauriAgentKitObservation?.entries.get({reference})?.element===document.activeElement")).await?;
+                        if focused == true {
+                            return Ok::<(), String>(());
+                        }
+                        tokio::time::sleep(Duration::from_millis(20)).await;
+                    }
+                })
+                .await
+                .map_err(|_| "editable_target_lost_focus".to_string())??;
                 if params["mode"] == "windows" {
                     native_focus(&view).await?;
                     native::text(&view, text)?;
